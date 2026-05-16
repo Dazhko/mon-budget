@@ -388,9 +388,15 @@ select.champ__input { cursor: pointer; }
   .grille-principale { grid-template-columns: 1fr; }
   .historique-entete { flex-direction: column; }
   .filtres { width: 100%; }
-  .filtre { flex: 1; }
+  .filtre { flex: 1; min-width: 0; }
+  /* Empêche iOS Safari de zoomer au focus quand font-size < 16px */
+  .champ__input, .filtre { font-size: 16px; }
 }
 @media (max-width: 480px) {
   .contenu { padding: 1rem; }
   .carte__valeur { font-size: 1.4rem; }
+  .entete { padding: 0 1rem; }
+  .panneau { padding: 1.25rem; }
+  .filtres { flex-direction: column; }
+  .filtre { width: 100%; }
 }
