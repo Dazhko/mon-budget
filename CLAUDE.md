@@ -3,6 +3,17 @@
 Application web 100 % front-end pour suivre ses dépenses et revenus au quotidien.
 Aucun serveur, aucune installation — ouvrir `index.html` directement dans le navigateur.
 
+## Déploiement
+
+| | |
+|---|---|
+| Dépôt | https://github.com/Dazhko/mon-budget |
+| Site en ligne | https://dazhko.github.io/mon-budget/ |
+| Hébergement | GitHub Pages — branche `main`, dossier racine `/` |
+| HTTPS | Forcé |
+
+Tout push sur `main` déclenche un rebuild automatique de Pages (workflow GitHub géré, visible dans l'onglet **Actions**).
+
 ## Stack technique
 
 | Couche | Technologie |
@@ -17,10 +28,14 @@ Aucun serveur, aucune installation — ouvrir `index.html` directement dans le n
 
 ```
 mon-budget/
-├── index.html   # Point d'entrée unique — toute la structure HTML
-├── style.css    # Design system complet (variables, composants, responsive)
-├── app.js       # Logique applicative — état, CRUD, rendu, événements
-└── CLAUDE.md    # Ce fichier
+├── index.html                  # Point d'entrée unique — toute la structure HTML + balises meta
+├── style.css                   # Design system complet (variables, composants, responsive)
+├── app.js                      # Logique applicative — état, CRUD, rendu, événements
+├── og-image.png                # Image Open Graph 1200×630 pour partage social
+├── generate-og.ps1             # Script PowerShell de génération de l'image OG (System.Drawing)
+├── og-design-philosophy.md     # Direction artistique de l'image OG (« Quiet Ledger »)
+├── .gitignore                  # Fichiers à ignorer (.vscode, *.log, etc.)
+└── CLAUDE.md                   # Ce fichier
 ```
 
 ## Architecture de app.js
@@ -94,6 +109,30 @@ Clé LocalStorage : `monBudget_transactions` → tableau JSON.
 - Fond flouté (`backdrop-filter: blur`)
 - Fermeture en cliquant en dehors de la modale
 
+## SEO et partage social
+
+Toutes les balises meta sont concentrées dans le `<head>` de `index.html` :
+
+- **Référencement** — `description`, `keywords`, `author`, `robots`, `canonical`
+- **UI mobile** — `theme-color` (`#6366f1`, couleur primaire)
+- **Favicon** — SVG inline (data URI) avec emoji 💰, zéro requête réseau
+- **Open Graph** — `og:type`, `og:title`, `og:description`, `og:url`, `og:site_name`, `og:locale`, `og:image` (+ `width`/`height`/`alt`)
+- **Twitter Card** — `summary_large_image` avec `twitter:image`
+
+L'image OG (`og-image.png`, 1200×630) est générée par `generate-og.ps1` via `System.Drawing` (.NET natif Windows). Elle reprend la charte graphique : titre, tagline, mockup des trois cartes solde / revenus / dépenses avec leurs accents indigo / vert / corail. Pour la régénérer après modification du script :
+
+```
+powershell -ExecutionPolicy Bypass -File generate-og.ps1
+```
+
+## Responsive
+
+| Breakpoint | Comportement |
+|------------|--------------|
+| ≥ 769 px   | Layout 3 colonnes pour le tableau de bord, 2 colonnes graphique + formulaire |
+| ≤ 768 px   | Toutes les grilles passent en colonne unique. `font-size: 16px` forcé sur les inputs pour empêcher le zoom automatique d'iOS Safari au focus |
+| ≤ 480 px   | Paddings réduits, filtres d'historique empilés à 100 % de largeur |
+
 ## Conventions de code
 
 - `'use strict'` en tête de `app.js`
@@ -107,9 +146,9 @@ Clé LocalStorage : `monBudget_transactions` → tableau JSON.
 
 ## Lancer le projet
 
-```
-Ouvrir index.html dans Chrome, Firefox ou Edge — aucune installation requise.
-```
+**En ligne** : https://dazhko.github.io/mon-budget/ (toujours à jour avec `main`)
+
+**En local** : ouvrir `index.html` dans Chrome, Firefox ou Edge — aucune installation requise.
 
 ## Tests manuels
 
