@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mon Budget</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <header class="entete">
+    <div class="entete__inner">
+      <h1 class="entete__titre">Mon Budget</h1>
+      <span class="entete__mois" id="moisCourant"></span>
+    </div>
+  </header>
+
+  <main class="contenu">
+
+    <!-- Tableau de bord -->
+    <section class="tableau-bord">
+      <div class="carte carte--solde">
+        <p class="carte__label">Solde actuel</p>
+        <p class="carte__valeur" id="solde">0,00 €</p>
+      </div>
+      <div class="carte carte--revenu">
+        <p class="carte__label">Revenus</p>
+        <p class="carte__valeur" id="totalRevenus">0,00 €</p>
+      </div>
+      <div class="carte carte--depense">
+        <p class="carte__label">Dépenses</p>
+        <p class="carte__valeur" id="totalDepenses">0,00 €</p>
+      </div>
+    </section>
+
+    <div class="grille-principale">
+
+      <!-- Graphique -->
+      <section class="panneau panneau--graphique">
+        <h2 class="panneau__titre">Répartition par catégorie</h2>
+        <div class="graphique-conteneur">
+          <canvas id="graphiqueCategories"></canvas>
+          <p class="graphique-vide" id="graphiqueVide">Aucune dépense à afficher</p>
+        </div>
+      </section>
+
+      <!-- Formulaire -->
+      <section class="panneau panneau--formulaire">
+        <h2 class="panneau__titre">Ajouter une transaction</h2>
+        <form id="formulaire" novalidate>
+
+          <div class="champ champ--radio">
+            <label class="radio-option">
+              <input type="radio" name="type" value="depense" checked />
+              <span class="radio-label radio-label--depense">Dépense</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="type" value="revenu" />
+              <span class="radio-label radio-label--revenu">Revenu</span>
+            </label>
+          </div>
+
+          <div class="champ">
+            <label class="champ__label" for="montant">Montant (€)</label>
+            <input class="champ__input" type="number" id="montant" min="0.01" step="0.01" placeholder="0,00" required />
+          </div>
+
+          <div class="champ">
+            <label class="champ__label" for="categorie">Catégorie</label>
+            <select class="champ__input" id="categorie" required>
+              <option value="alimentation">Alimentation</option>
+              <option value="logement">Logement</option>
+              <option value="transport">Transport</option>
+              <option value="loisirs">Loisirs</option>
+              <option value="santé">Santé</option>
+              <option value="autres">Autres</option>
+            </select>
+          </div>
+
+          <div class="champ">
+            <label class="champ__label" for="date">Date</label>
+            <input class="champ__input" type="date" id="date" required />
+          </div>
+
+          <div class="champ">
+            <label class="champ__label" for="description">Description</label>
+            <input class="champ__input" type="text" id="description" placeholder="Optionnelle" maxlength="100" />
+          </div>
+
+          <p class="erreur" id="erreur" hidden></p>
+
+          <button class="bouton-ajouter" type="submit">Ajouter</button>
+        </form>
+      </section>
+
+    </div>
+
+    <!-- Historique -->
+    <section class="panneau panneau--historique">
+      <div class="historique-entete">
+        <h2 class="panneau__titre">Historique</h2>
+        <div class="filtres">
+          <select class="filtre" id="filtreType">
+            <option value="tous">Tous</option>
+            <option value="depense">Dépenses</option>
+            <option value="revenu">Revenus</option>
+          </select>
+          <select class="filtre" id="filtreCategorie">
+            <option value="toutes">Toutes catégories</option>
+            <option value="alimentation">Alimentation</option>
+            <option value="logement">Logement</option>
+            <option value="transport">Transport</option>
+            <option value="loisirs">Loisirs</option>
+            <option value="santé">Santé</option>
+            <option value="autres">Autres</option>
+          </select>
+          <input class="filtre filtre--date" type="month" id="filtreMois" />
+        </div>
+      </div>
+
+      <div class="liste-transactions" id="listeTransactions">
+        <p class="liste-vide">Aucune transaction pour le moment.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modale de confirmation -->
+  <div class="modale-fond" id="modaleFond" hidden>
+    <div class="modale">
+      <p class="modale__texte">Supprimer cette transaction ?</p>
+      <div class="modale__actions">
+        <button class="bouton-modale bouton-modale--annuler" id="modaleAnnuler">Annuler</button>
+        <button class="bouton-modale bouton-modale--confirmer" id="modaleConfirmer">Supprimer</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
